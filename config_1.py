@@ -8,7 +8,7 @@ from numba import jit
 class Item:
     def __init__(self, item_id: int, dados: np.ndarray, cor: int):
         self.item_id = item_id
-        self.dados = dados  # Vetor de características numéricas
+        self.dados = dados  
         self.cor = cor  # Cor/grupo original (apenas para visualização)
     
     def __repr__(self):
@@ -19,7 +19,7 @@ class Formiga:
         self.formiga_id = formiga_id
         self.x = x
         self.y = y
-        self.carregando = False
+        self.carregando = False 
         self.item_carregado: Optional[Item] = None
     
     def mover(self, novo_x: int, novo_y: int):
@@ -45,18 +45,18 @@ def distancia_euclidiana(vetor1, vetor2):
 def calcular_similaridade(dist, alpha):
     """Calcula similaridade baseada na distância"""
     if dist < alpha:
-        return 1.0 - (dist / alpha)
+        return 1.0 - (dist / alpha) # Quanto menor a distância, maior a similaridade 
     return 0.0
 
 @jit(nopython=True, cache=True)
 def probabilidade_pegar_numba(f_xi, k1, alpha_prob):
     """Calcula probabilidade de pegar"""
-    return (k1 / (k1 + f_xi)) ** (2 * alpha_prob)
+    return (k1 / (k1 + f_xi)) ** (2 * alpha_prob) # Se f_xi é alto a probabilidade é baixa
 
 @jit(nopython=True, cache=True)
 def probabilidade_largar_numba(f_xi, k2, alpha_prob):
     """Calcula probabilidade de largar"""
-    return (f_xi / (k2 + f_xi)) ** (2 * alpha_prob)
+    return (f_xi / (k2 + f_xi)) ** (2 * alpha_prob) # Se f_xi é alto a probabilidade é alta
 
 class Grid:
     def __init__(self, largura: int, altura: int):
@@ -67,6 +67,7 @@ class Grid:
         self.formigas = [[[] for _ in range(largura)] for _ in range(altura)]
     
     def adicionar_item(self, item: Item, x: int, y: int) -> bool:
+        # Verifica se a posição é valida e está vazia
         if 0 <= x < self.altura and 0 <= y < self.largura and self.itens_array[x, y] == -1:
             self.itens_array[x, y] = item.item_id
             self.itens_obj[item.item_id] = item
@@ -97,6 +98,7 @@ class Grid:
         return False
     
     def obter_posicoes_vizinhas(self, x: int, y: int) -> List[Tuple[int, int]]:
+        # Retorna lista com as 4 posições vizinhas (não inclui diagonais)
         posicoes = []
         direcoes = [(-1, 0), (1, 0), (0, -1), (0, 1)]
         for dx, dy in direcoes:
@@ -174,6 +176,10 @@ class AntClusteringHeterogêneo:
     
     def calcular_f_heterogeneo(self, item: Item, x: int, y: int) -> float:
         """Calcula função de similaridade f(xi) baseada em distância euclidiana"""
+        # 1. Olha para todos os vizinhos ao redor (dentro do raio)
+        # 2. Para todos, calcula a distância euclidiana 
+        # 3. Converte a distância em similaridade
+        # 4. Retorna a média das similaridades
         soma_similaridade = 0.0
         count = 0
         
@@ -486,4 +492,5 @@ if __name__ == "__main__":
     print(f"\nTempo total: {tempo:.1f}s ({tempo/60:.1f}min)")
     print(f"Estado final: Grid={metricas['itens_no_grid']}, Carregando={metricas['formigas_carregando']}, Pureza={metricas['pureza_media']:.3f}")
     print(f"\nParâmetros: k1={K1}, k2={K2}, alpha={ALPHA}, raio={RAIO_VISAO}, temp={TEMPERATURA_MOVIMENTO}")
+
     print("=" * 75)
