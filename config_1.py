@@ -1,3 +1,27 @@
+# Fase 1 
+#   1. Carrega os dados
+#   2. Normaliza e distribui no grid aleatóriamente
+#   3. Cria e distribui formigas aleatóriamente 
+# Fase 2
+#   1. Cada iteração todas as formigas agem uma vez
+#   2. Calcula o movimento inteligete 
+#   3. Formiga decide se pega ou não o item
+#      3.1. Calcula f_xi = quão bem o item esta posicionado 
+#      - Olha o vizinho ao redor, calcula a distância para cada vizinho, converte a distanca em similaridade (f_xi = média das similaridades)
+#      3.2. Calcula a probabilidaed de pegar (prob = (k1 / (k1 + f_xi))^expoente)
+#      3.3. Sorteia: random < prob? Se sim pega, senão, não pega
+#   4. Formiga decide se larga ou não um item
+#      4.1. Calcula f_xi
+#      - Simula largar o item, olha seus vizinhos, calcula a similaride média
+#      4.2. Calcula a probabilidade de largar (prob = (f_xi / (k2 + f_xi))^expoente)
+#      4.3. Sorteia: random < prob? Se sim larga, senão, continua carregando
+
+# Similaridade Local
+# 1. Identifica os vizinhos
+# 2. Calcula a distância euclidiana para cada vizinho
+# 3. Converte distância em similaridade
+# 4. Calcula a média
+
 import numpy as np
 import matplotlib.pyplot as plt
 import random
@@ -494,3 +518,4 @@ if __name__ == "__main__":
     print(f"\nParâmetros: k1={K1}, k2={K2}, alpha={ALPHA}, raio={RAIO_VISAO}, temp={TEMPERATURA_MOVIMENTO}")
 
     print("=" * 75)
+
